@@ -5,14 +5,18 @@ import { useState } from "react";
 import FormGroup from "./FormGroup";
 import { createUser } from "../services/UserServices";
 import { toast } from "react-toastify";
+import Loading from "./Loading";
 const ModalComponent = ({ show, handleClose, handleUpdateList }) => {
   const [payload, setPayload] = useState({
     name: "",
     job: "",
   });
+  const [isloading, setIsLoading] = useState(false);
   const handleSave = async (payload) => {
+    setIsLoading(true);
     let res = await createUser(payload);
-    if (res && res.id) {
+    if (res && res.id && res.name && res.job) {
+      setIsLoading(false);
       handleClose();
       setPayload({
         name: "",
@@ -20,7 +24,8 @@ const ModalComponent = ({ show, handleClose, handleUpdateList }) => {
       });
       toast.success("Create user success");
       handleUpdateList({ first_name: res.name, job: res.job, id: res.id });
-    }else {
+    } else {
+      setIsLoading(false);
       toast.error("Create user failed");
     }
   };
@@ -36,37 +41,45 @@ const ModalComponent = ({ show, handleClose, handleUpdateList }) => {
           <Modal.Title>Add User </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
-            <FormGroup
-              controlId="name"
-              label="Name"
-              type="text"
-              placeholder="morpheus"
-              setPayload={setPayload}
-              payload={payload}
-            />
-            <FormGroup
-              controlId="job"
-              label="Job"
-              type="text"
-              placeholder="leader"
-              setPayload={setPayload}
-              payload={payload}
-            />
-          </Form>
+          {isloading ? (
+            <div className="d-flex justify-content-center">
+              <Loading />
+            </div>
+          ) : (
+            <Form>
+              <FormGroup
+                controlId="name"
+                label="Name"
+                type="text"
+                placeholder="morpheus"
+                setPayload={setPayload}
+                payload={payload}
+              />
+              <FormGroup
+                controlId="job"
+                label="Job"
+                type="text"
+                placeholder="leader"
+                setPayload={setPayload}
+                payload={payload}
+              />
+            </Form>
+          )}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button
-            disabled={!payload.name || !payload.job}
-            onClick={() => handleSave(payload)}
-            variant="dark"
-          >
-            Save
-          </Button>
-        </Modal.Footer>
+        {!isloading && (
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button
+              disabled={!payload.name || !payload.job}
+              onClick={() => handleSave(payload)}
+              variant="dark"
+            >
+              Save
+            </Button>
+          </Modal.Footer>
+        )}
       </Modal>
     </>
   );
