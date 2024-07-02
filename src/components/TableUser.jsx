@@ -4,13 +4,16 @@ import { fetchAllUser } from "../services/UserServices";
 import Paginate from "./Paginate";
 import ModalComponent from "./ModalComponent";
 import _ from "lodash";
+import ModalDelete from "./ModalDelete";
 
 function TableUser() {
   const [listUsers, setListUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const [isUpdate, setIsUpdate] = useState(false);
+  const [mode, setMode] = useState("");
   const [editUser, setEditUser] = useState(null);
+  const [isShowModal, setIsShowModal] = useState(false);
+  const [isShowModalDelete, setIsShowModalDelete] = useState(false);
   useEffect(() => {
     getUser(page);
   }, [page]);
@@ -25,21 +28,28 @@ function TableUser() {
   const handleChangePage = (item) => {
     setPage(item);
   };
-  const [isShowModal, setIsShowModal] = useState(false);
   const handleClose = () => {
-    setIsUpdate(false);
+    setMode("");
     setIsShowModal(false);
+    setIsShowModalDelete(false);
   };
   const handleUpdateList = (user) => {
-    if (!isUpdate) {
+    if (mode === "add") {
       setListUsers([user, ...listUsers]);
-    } else {
+    } else if (mode === "edit") {
       let pos = listUsers.findIndex((item) => item.id === user.id);
-      //using lodash to update the list
       let newList = _.cloneDeep(listUsers);
       newList[pos].first_name = user.first_name;
       setListUsers(newList);
+    } else {
+      let newList = _.cloneDeep(listUsers);
+      newList = newList.filter((item) => item.id !== user);
+      setListUsers(newList);
     }
+  };
+  const handleDelete = (user) => {
+    setIsShowModalDelete(true);
+    setEditUser(user);
   };
 
   return (
@@ -49,7 +59,7 @@ function TableUser() {
         <Button
           onClick={() => {
             setEditUser(null);
-            isUpdate && setIsUpdate(false);
+            setMode("add");
             setIsShowModal(true);
           }}
           variant="success"
@@ -81,14 +91,21 @@ function TableUser() {
                     <Button
                       variant="warning"
                       onClick={() => {
-                        setIsUpdate(true);
+                        setMode("edit");
                         setIsShowModal(true);
                         setEditUser(item);
                       }}
                     >
                       Edit
                     </Button>
-                    <Button variant="danger">Delete</Button>
+                    <Button
+                      variant="danger"
+                      onClick={() => {
+                        handleDelete(item);
+                      }}
+                    >
+                      Delete
+                    </Button>
                   </div>
                 </td>
               </tr>
@@ -102,13 +119,25 @@ function TableUser() {
           handleChangePage={handleChangePage}
         />
       )}
-      <ModalComponent
-        editUser={editUser}
-        isUpdate={isUpdate}
-        show={isShowModal}
-        handleClose={handleClose}
-        handleUpdateList={handleUpdateList}
-      />
+      {editUser && (
+        <>
+          <ModalComponent
+            editUser={editUser}
+            mode={mode}
+            show={isShowModal}
+            handleClose={handleClose}
+            handleUpdateList={handleUpdateList}
+          />
+
+          <ModalDelete
+            mode={mode}
+            delInfoUser={editUser}
+            show={isShowModalDelete}
+            handleClose={handleClose}
+            handleUpdateList={handleUpdateList}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -8,7 +8,10 @@ const createUser = (payload) => {
   return axios.post(`api/users`, payload);
 };
 
-const updateUser = (payload) => {   
-  return axios.put(`api/users/2`, payload);
+const updateUser = (payload) => {
+  return axios.put(`api/users/${payload.id}`, payload);
 };
-export { fetchAllUser, createUser, updateUser };
+const deleteUser = (id) => {
+  return axios.delete(`api/users/${id}`);
+};
+export { fetchAllUser, createUser, updateUser, deleteUser };

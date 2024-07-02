@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import Loading from "./Loading";
 const ModalComponent = ({
   editUser,
-  isUpdate,
+  mode,
   show,
   handleClose,
   handleUpdateList,
@@ -20,7 +20,7 @@ const ModalComponent = ({
   const [isloading, setIsLoading] = useState(false);
   const handleSave = async (payload) => {
     setIsLoading(true);
-    isUpdate ? handleUpdate(payload) : handleCreate(payload);
+    mode ==="edit" ? handleUpdate(payload) : handleCreate(payload);
   };
   const handleCreate = async (payload) => {
     let res = await createUser(payload);
@@ -55,10 +55,11 @@ const ModalComponent = ({
     }
   };
   useEffect(() => {
-    if (isUpdate) {
+    if (mode === "edit") {
       setPayload({
         name: editUser?.first_name,
         job: editUser?.job || "",
+        id: editUser?.id
       });
     } else {
       setPayload({
@@ -66,7 +67,7 @@ const ModalComponent = ({
         job: "",
       });
     }
-  }, [editUser, isUpdate]);
+  }, [editUser, mode]);
   return (
     <>
       <Modal
@@ -76,7 +77,7 @@ const ModalComponent = ({
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>{isUpdate ? "Update User" : "Add User"}</Modal.Title>
+          <Modal.Title>{mode ==="edit" ? "Update User" : "Add User"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {isloading ? (
@@ -92,7 +93,7 @@ const ModalComponent = ({
                 placeholder="morpheus"
                 setPayload={setPayload}
                 payload={payload}
-                value={isUpdate ? editUser?.first_name : ""}
+                value={mode ==="edit" ? editUser?.first_name : ""}
               />
               <FormGroup
                 controlId="job"
@@ -115,7 +116,7 @@ const ModalComponent = ({
               onClick={() => handleSave(payload)}
               variant="dark"
             >
-              {isUpdate ? "Update" : "Save"}
+              {mode ==="edit" ? "Update" : "Save"}
             </Button>
           </Modal.Footer>
         )}
