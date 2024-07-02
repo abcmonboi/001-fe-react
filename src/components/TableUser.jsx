@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {Button,Table} from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { fetchAllUser } from "../services/UserServices";
 import Paginate from "./Paginate";
 import ModalComponent from "./ModalComponent";
+import _ from "lodash";
 
 function TableUser() {
   const [listUsers, setListUsers] = useState([]);
@@ -24,27 +25,38 @@ function TableUser() {
   const handleChangePage = (item) => {
     setPage(item);
   };
-  const [isShowModal,setIsShowModal] = useState(false);
+  const [isShowModal, setIsShowModal] = useState(false);
   const handleClose = () => {
     setIsUpdate(false);
     setIsShowModal(false);
   };
   const handleUpdateList = (user) => {
-    setListUsers([user,...listUsers])
+    if (!isUpdate) {
+      setListUsers([user, ...listUsers]);
+    } else {
+      let pos = listUsers.findIndex((item) => item.id === user.id);
+      //using lodash to update the list
+      let newList = _.cloneDeep(listUsers);
+      newList[pos].first_name = user.first_name;
+      setListUsers(newList);
+    }
   };
 
   return (
     <>
-         <div className="mt-4 mb-3 d-flex justify-content-between align-align-items-center">
-         <h3> Manage User</h3>
-         <Button onClick={()=>
-          {
-          setEditUser(null);
-          isUpdate && setIsUpdate(false);
-          setIsShowModal(true);
-          }
-          } variant="success">Add</Button>
-        </div>
+      <div className="mt-4 mb-3 d-flex justify-content-between align-align-items-center">
+        <h3> Manage User</h3>
+        <Button
+          onClick={() => {
+            setEditUser(null);
+            isUpdate && setIsUpdate(false);
+            setIsShowModal(true);
+          }}
+          variant="success"
+        >
+          Add
+        </Button>
+      </div>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -66,17 +78,18 @@ function TableUser() {
                 <td>{item?.last_name}</td>
                 <td width={"10%"}>
                   <div className="d-flex justify-content-center gap-4">
-                  <Button
-                   variant="warning"
-                   onClick={()=>{
-                    setIsUpdate(true);
-                    setIsShowModal(true);
-                    setEditUser(item);
-                   }}
-                   >Edit</Button>
-                  <Button variant="danger">Delete</Button>
+                    <Button
+                      variant="warning"
+                      onClick={() => {
+                        setIsUpdate(true);
+                        setIsShowModal(true);
+                        setEditUser(item);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button variant="danger">Delete</Button>
                   </div>
-                
                 </td>
               </tr>
             ))}
@@ -89,8 +102,13 @@ function TableUser() {
           handleChangePage={handleChangePage}
         />
       )}
-      <ModalComponent editUser={editUser} isUpdate={isUpdate} show={isShowModal} handleClose={handleClose} handleUpdateList={handleUpdateList}/>
-
+      <ModalComponent
+        editUser={editUser}
+        isUpdate={isUpdate}
+        show={isShowModal}
+        handleClose={handleClose}
+        handleUpdateList={handleUpdateList}
+      />
     </>
   );
 }

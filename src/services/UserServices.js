@@ -8,4 +8,7 @@ const createUser = (payload) => {
   return axios.post(`api/users`, payload);
 };
 
-export { fetchAllUser,createUser };
+const updateUser = (payload) => {   
+  return axios.put(`api/users/2`, payload);
+};
+export { fetchAllUser, createUser, updateUser };

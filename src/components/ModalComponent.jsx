@@ -3,7 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useEffect, useState } from "react";
 import FormGroup from "./FormGroup";
-import { createUser } from "../services/UserServices";
+import { createUser, updateUser } from "../services/UserServices";
 import { toast } from "react-toastify";
 import Loading from "./Loading";
 const ModalComponent = ({
@@ -20,6 +20,9 @@ const ModalComponent = ({
   const [isloading, setIsLoading] = useState(false);
   const handleSave = async (payload) => {
     setIsLoading(true);
+    isUpdate ? handleUpdate(payload) : handleCreate(payload);
+  };
+  const handleCreate = async (payload) => {
     let res = await createUser(payload);
     if (res && res.id && res.name && res.job) {
       setIsLoading(false);
@@ -29,10 +32,26 @@ const ModalComponent = ({
         job: "",
       });
       toast.success("Create user success");
-      handleUpdateList({ first_name: res.name, job: res.job, id: res.id });
+      handleUpdateList({ first_name: res.name,   id: res?.id });
     } else {
       setIsLoading(false);
       toast.error("Create user failed");
+    }
+  };
+  const handleUpdate = async (payload) => {
+    let res = await updateUser(payload);
+    if (res && res.updatedAt) {
+      setIsLoading(false);
+      handleClose();
+      setPayload({
+        name: "",
+        job: "",
+      });
+      toast.success("Update user success");
+      handleUpdateList({ first_name: res.name, job: res.job, id: editUser.id });
+    } else {
+      setIsLoading(false);
+      toast.error("Update user failed");
     }
   };
   useEffect(() => {
@@ -92,7 +111,7 @@ const ModalComponent = ({
               Close
             </Button>
             <Button
-              disabled={!payload.name || !payload.job}
+              disabled={!payload.name }
               onClick={() => handleSave(payload)}
               variant="dark"
             >
