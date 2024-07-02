@@ -1,12 +1,18 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormGroup from "./FormGroup";
 import { createUser } from "../services/UserServices";
 import { toast } from "react-toastify";
 import Loading from "./Loading";
-const ModalComponent = ({ show, handleClose, handleUpdateList }) => {
+const ModalComponent = ({
+  editUser,
+  isUpdate,
+  show,
+  handleClose,
+  handleUpdateList,
+}) => {
   const [payload, setPayload] = useState({
     name: "",
     job: "",
@@ -29,6 +35,19 @@ const ModalComponent = ({ show, handleClose, handleUpdateList }) => {
       toast.error("Create user failed");
     }
   };
+  useEffect(() => {
+    if (isUpdate) {
+      setPayload({
+        name: editUser?.first_name,
+        job: editUser?.job || "",
+      });
+    } else {
+      setPayload({
+        name: "",
+        job: "",
+      });
+    }
+  }, [editUser, isUpdate]);
   return (
     <>
       <Modal
@@ -38,7 +57,7 @@ const ModalComponent = ({ show, handleClose, handleUpdateList }) => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add User </Modal.Title>
+          <Modal.Title>{isUpdate ? "Update User" : "Add User"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {isloading ? (
@@ -54,6 +73,7 @@ const ModalComponent = ({ show, handleClose, handleUpdateList }) => {
                 placeholder="morpheus"
                 setPayload={setPayload}
                 payload={payload}
+                value={isUpdate ? editUser?.first_name : ""}
               />
               <FormGroup
                 controlId="job"
@@ -76,7 +96,7 @@ const ModalComponent = ({ show, handleClose, handleUpdateList }) => {
               onClick={() => handleSave(payload)}
               variant="dark"
             >
-              Save
+              {isUpdate ? "Update" : "Save"}
             </Button>
           </Modal.Footer>
         )}

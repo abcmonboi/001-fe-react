@@ -26,6 +26,7 @@ const FormGroup = ({
         isValid={payload[controlId] && payload[controlId].length > 0}
         type={type}
         placeholder={placeholder}
+        value={payload[controlId]}
       />
     </Col>
 

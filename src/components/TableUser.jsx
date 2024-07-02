@@ -8,6 +8,8 @@ function TableUser() {
   const [listUsers, setListUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [editUser, setEditUser] = useState(null);
   useEffect(() => {
     getUser(page);
   }, [page]);
@@ -24,6 +26,7 @@ function TableUser() {
   };
   const [isShowModal,setIsShowModal] = useState(false);
   const handleClose = () => {
+    setIsUpdate(false);
     setIsShowModal(false);
   };
   const handleUpdateList = (user) => {
@@ -34,7 +37,13 @@ function TableUser() {
     <>
          <div className="mt-4 mb-3 d-flex justify-content-between align-align-items-center">
          <h3> Manage User</h3>
-         <Button onClick={()=>setIsShowModal(true)} variant="success">Add</Button>
+         <Button onClick={()=>
+          {
+          setEditUser(null);
+          isUpdate && setIsUpdate(false);
+          setIsShowModal(true);
+          }
+          } variant="success">Add</Button>
         </div>
       <Table striped bordered hover>
         <thead>
@@ -43,6 +52,7 @@ function TableUser() {
             <th>Email</th>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -54,6 +64,20 @@ function TableUser() {
                 <td>{item?.email}</td>
                 <td>{item?.first_name}</td>
                 <td>{item?.last_name}</td>
+                <td width={"10%"}>
+                  <div className="d-flex justify-content-center gap-4">
+                  <Button
+                   variant="warning"
+                   onClick={()=>{
+                    setIsUpdate(true);
+                    setIsShowModal(true);
+                    setEditUser(item);
+                   }}
+                   >Edit</Button>
+                  <Button variant="danger">Delete</Button>
+                  </div>
+                
+                </td>
               </tr>
             ))}
         </tbody>
@@ -65,7 +89,7 @@ function TableUser() {
           handleChangePage={handleChangePage}
         />
       )}
-      <ModalComponent show={isShowModal} handleClose={handleClose} handleUpdateList={handleUpdateList}/>
+      <ModalComponent editUser={editUser} isUpdate={isUpdate} show={isShowModal} handleClose={handleClose} handleUpdateList={handleUpdateList}/>
 
     </>
   );
