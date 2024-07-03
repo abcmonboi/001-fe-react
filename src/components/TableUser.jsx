@@ -1,13 +1,15 @@
+import "./TableUser.scss";
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { fetchAllUser } from "../services/UserServices";
 import Paginate from "./Paginate";
 import ModalComponent from "./ModalComponent";
-import _  from "lodash";
-import _debounce from 'lodash/debounce';
+import _ from "lodash";
+import _debounce from "lodash/debounce";
 import ModalDelete from "./ModalDelete";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
+import { CSVLink } from "react-csv";
 function TableUser() {
   const [listUsers, setListUsers] = useState([]);
   const [page, setPage] = useState(1);
@@ -65,28 +67,48 @@ function TableUser() {
   const handleSearch = _debounce((e) => {
     let tempValue = e.target.value;
 
-    if(tempValue){
+    if (tempValue) {
       let tempList = _.cloneDeep(listUsers);
-      tempList = tempList.filter(item => item.email.includes(tempValue));
+      tempList = tempList.filter((item) => item.email.includes(tempValue));
       setListUsers(tempList);
-    }else {
+    } else {
       getUser(page);
     }
-  },300);
+  }, 300);
+  const csvData = [
+    ["firstname", "lastname", "email"],
+    ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    ["Raed", "Labes", "rl@smthing.co.com"],
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
+  ];
   return (
     <>
       <div className="mt-4 mb-3 d-flex justify-content-between align-align-items-center">
         <h3> Manage User </h3>
-        <Button
-          onClick={() => {
-            setEditUser(null);
-            setMode("add");
-            setIsShowModal(true);
-          }}
-          variant="success"
-        >
-          Add
-        </Button>
+        <div className="button-group">
+          <div className="btn btn-info">
+            <label htmlFor="importCSV">
+              <i className="fa-solid fa-file-csv"></i>
+              <span>Import</span>
+            </label>
+            <input type="file" id="importCSV" hidden></input>
+          </div>
+          <CSVLink filename="users" className="btn btn-warning" data={csvData}>
+            <i className="fa-solid fa-file-export"></i>
+            <span>Export</span>
+          </CSVLink>
+          <button
+            onClick={() => {
+              setEditUser(null);
+              setMode("add");
+              setIsShowModal(true);
+            }}
+            className="btn btn-success"
+          >
+            <i className="fa-solid fa-plus"></i>
+            <span>Add</span>
+          </button>
+        </div>
       </div>
       <div className="col-5">
         <InputGroup className="mb-3">

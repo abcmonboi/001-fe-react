@@ -11,12 +11,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  i {
-    color: green;
-    cursor: pointer;
-  }
-}
