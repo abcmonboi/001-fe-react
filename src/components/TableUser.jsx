@@ -20,6 +20,7 @@ function TableUser() {
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
   const [orderBy, setOrderBy] = useState("");
   const [orderField, setOrderField] = useState("");
+  const [csvData, setCsvData] = useState([]);
   useEffect(() => {
     getUser(page);
   }, [page]);
@@ -75,12 +76,28 @@ function TableUser() {
       getUser(page);
     }
   }, 300);
-  const csvData = [
-    ["firstname", "lastname", "email"],
-    ["Ahmed", "Tomi", "ah@smthing.co.com"],
-    ["Raed", "Labes", "rl@smthing.co.com"],
-    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
-  ];
+  // const csvData = [
+  //   ["firstname", "lastname", "email"],
+  //   ["Ahmed", "Tomi", "ah@smthing.co.com"],
+  //   ["Raed", "Labes", "rl@smthing.co.com"],
+  //   ["Yezzi", "Min l3b", "ymin@cocococo.com"],
+  // ];
+  const getCSVUser = (event, done) => {
+    let result = [];
+    if (listUsers && listUsers.length > 0) {
+      result.push([`ID`, `Email`, `First Name`, `Last Name`]);
+      listUsers.forEach((item, index) => {
+        let arr = [];
+        arr[0] = item?.id;
+        arr[1] = item?.email;
+        arr[2] = item?.first_name;
+        arr[3] = item?.last_name;
+        result.push(arr);
+      });
+      setCsvData(result);
+      done();
+    }
+  };
   return (
     <>
       <div className="mt-4 mb-3 d-flex justify-content-between align-align-items-center">
@@ -93,7 +110,13 @@ function TableUser() {
             </label>
             <input type="file" id="importCSV" hidden></input>
           </div>
-          <CSVLink filename="users" className="btn btn-warning" data={csvData}>
+          <CSVLink
+            asyncOnClick={true}
+            filename="users"
+            className="btn btn-warning"
+            data={csvData}
+            onClick={getCSVUser}
+          >
             <i className="fa-solid fa-file-export"></i>
             <span>Export</span>
           </CSVLink>
