@@ -14,6 +14,8 @@ function TableUser() {
   const [editUser, setEditUser] = useState(null);
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+  const [orderBy, setOrderBy] = useState("");
+  const [orderField, setOrderField] = useState("");
   useEffect(() => {
     getUser(page);
   }, [page]);
@@ -51,11 +53,17 @@ function TableUser() {
     setIsShowModalDelete(true);
     setEditUser(user);
   };
-
+  const handleSort = (sortedBy, sortedField) => {
+    setOrderBy(sortedBy);
+    setOrderField(sortedField);
+    let newList = _.cloneDeep(listUsers);
+    newList = _.orderBy(listUsers, [sortedField], [sortedBy]);
+    setListUsers(newList);
+  };
   return (
     <>
       <div className="mt-4 mb-3 d-flex justify-content-between align-align-items-center">
-        <h3> Manage User</h3>
+        <h3> Manage User </h3>
         <Button
           onClick={() => {
             setEditUser(null);
@@ -70,9 +78,37 @@ function TableUser() {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>ID</th>
+            <th>
+              <div className="table-header">
+                <span>ID</span>
+                {(orderBy === "desc" && orderField === "id") ? (
+                <i
+                  onClick={() => handleSort("asc", "id")}
+                  className="fa-solid fa-arrow-up-9-1"
+                ></i>
+                ) :(
+                <i
+                  onClick={() => handleSort("desc", "id")}
+                  className="fa-solid fa-arrow-down-1-9"
+                ></i>
+                )}
+              </div>
+            </th>
             <th>Email</th>
-            <th>First Name</th>
+            <th>
+              <div className="table-header">
+                <span>First Name</span>
+                {(orderBy === "desc" && orderField === "first_name") ?(
+                <i
+                  onClick={() => handleSort("asc", "first_name")}
+                  className="fa-solid fa-arrow-up-z-a"
+                ></i>) :(
+                <i
+                  onClick={() => handleSort("desc", "first_name")}
+                  className="fa-solid fa-arrow-down-a-z"
+                ></i>)}
+              </div>
+            </th>
             <th>Last Name</th>
             <th>Action</th>
           </tr>
@@ -82,11 +118,11 @@ function TableUser() {
             listUsers.length > 0 &&
             listUsers.map((item, index) => (
               <tr key={`user-${index}`}>
-                <td>{item.id}</td>
+                <td width={"5%"}>{item.id}</td>
                 <td>{item?.email}</td>
-                <td>{item?.first_name}</td>
+                <td width={"20%"}>{item?.first_name}</td>
                 <td>{item?.last_name}</td>
-                <td width={"10%"}>
+                <td width={"8%"}>
                   <div className="d-flex justify-content-center gap-4">
                     <Button
                       variant="warning"
@@ -119,7 +155,7 @@ function TableUser() {
           handleChangePage={handleChangePage}
         />
       )}
-      {editUser && (
+     
         <>
           <ModalComponent
             editUser={editUser}
@@ -128,7 +164,7 @@ function TableUser() {
             handleClose={handleClose}
             handleUpdateList={handleUpdateList}
           />
-
+ {editUser  && (
           <ModalDelete
             mode={mode}
             delInfoUser={editUser}
@@ -136,8 +172,9 @@ function TableUser() {
             handleClose={handleClose}
             handleUpdateList={handleUpdateList}
           />
+        )}
         </>
-      )}
+
     </>
   );
 }
