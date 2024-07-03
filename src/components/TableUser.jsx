@@ -3,9 +3,11 @@ import { Button, Table } from "react-bootstrap";
 import { fetchAllUser } from "../services/UserServices";
 import Paginate from "./Paginate";
 import ModalComponent from "./ModalComponent";
-import _ from "lodash";
+import _  from "lodash";
+import _debounce from 'lodash/debounce';
 import ModalDelete from "./ModalDelete";
-
+import InputGroup from "react-bootstrap/InputGroup";
+import Form from "react-bootstrap/Form";
 function TableUser() {
   const [listUsers, setListUsers] = useState([]);
   const [page, setPage] = useState(1);
@@ -60,6 +62,17 @@ function TableUser() {
     newList = _.orderBy(listUsers, [sortedField], [sortedBy]);
     setListUsers(newList);
   };
+  const handleSearch = _debounce((e) => {
+    let tempValue = e.target.value;
+
+    if(tempValue){
+      let tempList = _.cloneDeep(listUsers);
+      tempList = tempList.filter(item => item.email.includes(tempValue));
+      setListUsers(tempList);
+    }else {
+      getUser(page);
+    }
+  },300);
   return (
     <>
       <div className="mt-4 mb-3 d-flex justify-content-between align-align-items-center">
@@ -75,22 +88,36 @@ function TableUser() {
           Add
         </Button>
       </div>
+      <div className="col-5">
+        <InputGroup className="mb-3">
+          <InputGroup.Text id="basic-addon1">
+            <i className="fa-solid fa-magnifying-glass"></i>
+          </InputGroup.Text>
+          <Form.Control
+            placeholder="Search user by email...."
+            aria-label="Username"
+            aria-describedby="basic-addon1"
+            onChange={(e) => handleSearch(e)}
+          />
+        </InputGroup>
+      </div>
+
       <Table striped bordered hover>
         <thead>
           <tr>
             <th>
               <div className="table-header">
                 <span>ID</span>
-                {(orderBy === "desc" && orderField === "id") ? (
-                <i
-                  onClick={() => handleSort("asc", "id")}
-                  className="fa-solid fa-arrow-up-9-1"
-                ></i>
-                ) :(
-                <i
-                  onClick={() => handleSort("desc", "id")}
-                  className="fa-solid fa-arrow-down-1-9"
-                ></i>
+                {orderBy === "desc" && orderField === "id" ? (
+                  <i
+                    onClick={() => handleSort("asc", "id")}
+                    className="fa-solid fa-arrow-up-9-1"
+                  ></i>
+                ) : (
+                  <i
+                    onClick={() => handleSort("desc", "id")}
+                    className="fa-solid fa-arrow-down-1-9"
+                  ></i>
                 )}
               </div>
             </th>
@@ -98,15 +125,17 @@ function TableUser() {
             <th>
               <div className="table-header">
                 <span>First Name</span>
-                {(orderBy === "desc" && orderField === "first_name") ?(
-                <i
-                  onClick={() => handleSort("asc", "first_name")}
-                  className="fa-solid fa-arrow-up-z-a"
-                ></i>) :(
-                <i
-                  onClick={() => handleSort("desc", "first_name")}
-                  className="fa-solid fa-arrow-down-a-z"
-                ></i>)}
+                {orderBy === "desc" && orderField === "first_name" ? (
+                  <i
+                    onClick={() => handleSort("asc", "first_name")}
+                    className="fa-solid fa-arrow-up-z-a"
+                  ></i>
+                ) : (
+                  <i
+                    onClick={() => handleSort("desc", "first_name")}
+                    className="fa-solid fa-arrow-down-a-z"
+                  ></i>
+                )}
               </div>
             </th>
             <th>Last Name</th>
@@ -155,16 +184,16 @@ function TableUser() {
           handleChangePage={handleChangePage}
         />
       )}
-     
-        <>
-          <ModalComponent
-            editUser={editUser}
-            mode={mode}
-            show={isShowModal}
-            handleClose={handleClose}
-            handleUpdateList={handleUpdateList}
-          />
- {editUser  && (
+
+      <>
+        <ModalComponent
+          editUser={editUser}
+          mode={mode}
+          show={isShowModal}
+          handleClose={handleClose}
+          handleUpdateList={handleUpdateList}
+        />
+        {editUser && (
           <ModalDelete
             mode={mode}
             delInfoUser={editUser}
@@ -173,8 +202,7 @@ function TableUser() {
             handleUpdateList={handleUpdateList}
           />
         )}
-        </>
-
+      </>
     </>
   );
 }
