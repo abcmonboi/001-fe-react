@@ -10,6 +10,9 @@ import ModalDelete from "./ModalDelete";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
 import { CSVLink } from "react-csv";
+import { toast } from "react-toastify";
+import fileUrl from "../template_file/users_template.csv";
+import Papa from "papaparse";
 function TableUser() {
   const [listUsers, setListUsers] = useState([]);
   const [page, setPage] = useState(1);
@@ -76,46 +79,104 @@ function TableUser() {
       getUser(page);
     }
   }, 300);
-  // const csvData = [
-  //   ["firstname", "lastname", "email"],
-  //   ["Ahmed", "Tomi", "ah@smthing.co.com"],
-  //   ["Raed", "Labes", "rl@smthing.co.com"],
-  //   ["Yezzi", "Min l3b", "ymin@cocococo.com"],
-  // ];
-  const getCSVUser = (event, done) => {
+
+  const exportCSVUser = (event, done) => {
     let result = [];
     if (listUsers && listUsers.length > 0) {
       result.push([`ID`, `Email`, `First Name`, `Last Name`]);
-      listUsers.forEach((item, index) => {
+      listUsers.map((item, index) => {
         let arr = [];
         arr[0] = item?.id;
         arr[1] = item?.email;
         arr[2] = item?.first_name;
         arr[3] = item?.last_name;
-        result.push(arr);
+        return result.push(arr);
       });
       setCsvData(result);
       done();
     }
+  };
+  const handleImportCSV = (e) => {
+    let file = e.target.files[0];
+    if (file?.type !== "text/csv") {
+      toast.error("Wrong format !!! Only accept CSV type");
+    } else {
+      Papa.parse(file, {
+        header: false,
+        complete: function (responses) {
+          let result = responses.data;
+          if (result.length > 0) {
+            if (result[0] && result[0]?.length === 3) {
+              if (
+                result[0][0] !== "email" ||
+                result[0][1] !== "first_name" ||
+                result[0][2] !== "last_name"
+              ) {
+                toast.error(
+                  "Wrong header format !!! File have error at header"
+                );
+              } else {
+                let final = [];
+                result.map((item, index) => {
+                  if (index > 0 && item.length === 3) {
+                    let obj = {};
+                    obj.email = item[0];
+                    obj.first_name = item[1];
+                    obj.last_name = item[2];
+                    final.push(obj);
+                  } 
+                  return final;
+                });
+                setListUsers(final);
+              }
+            } else {
+              toast.error("Wrong header format !!! Header mush have 3 col");
+            }
+          } else {
+            toast.error("Wrong file !!! File is empty");
+          }
+        },
+      });
+    }
+  };
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = "users_template.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
   return (
     <>
       <div className="mt-4 mb-3 d-flex justify-content-between align-align-items-center">
         <h3> Manage User </h3>
         <div className="button-group">
-          <div className="btn btn-info">
-            <label htmlFor="importCSV">
-              <i className="fa-solid fa-file-csv"></i>
-              <span>Import</span>
-            </label>
-            <input type="file" id="importCSV" hidden></input>
-          </div>
+          <button
+            onClick={() => {
+              handleDownload();
+            }}
+            className="btn btn-secondary"
+          >
+            <i className="fa-solid fa-download"></i>
+            <span>Download Template File</span>
+          </button>
+          <label htmlFor="importCSV" className="btn btn-info">
+            <i className="fa-solid fa-file-csv"></i>
+            <span>Import</span>
+          </label>
+          <input
+            onChange={(e) => handleImportCSV(e)}
+            type="file"
+            id="importCSV"
+            hidden
+          ></input>
           <CSVLink
             asyncOnClick={true}
             filename="users"
             className="btn btn-warning"
             data={csvData}
-            onClick={getCSVUser}
+            onClick={exportCSVUser}
           >
             <i className="fa-solid fa-file-export"></i>
             <span>Export</span>
