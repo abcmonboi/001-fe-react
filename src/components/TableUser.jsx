@@ -13,6 +13,8 @@ import { CSVLink } from "react-csv";
 import { toast } from "react-toastify";
 import fileUrl from "../template_file/users_template.csv";
 import Papa from "papaparse";
+import Loading from "./Loading";
+
 function TableUser() {
   const [listUsers, setListUsers] = useState([]);
   const [page, setPage] = useState(1);
@@ -24,7 +26,9 @@ function TableUser() {
   const [orderBy, setOrderBy] = useState("");
   const [orderField, setOrderField] = useState("");
   const [csvData, setCsvData] = useState([]);
+  const [isloading, setIsLoading] = useState(true);
   useEffect(() => {
+    setIsLoading(true);
     getUser(page);
   }, [page]);
 
@@ -33,6 +37,9 @@ function TableUser() {
     if (res && res.data) {
       setListUsers(res.data);
       setTotalPage(res.total_pages);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
     }
   };
   const handleChangePage = (item) => {
@@ -124,7 +131,7 @@ function TableUser() {
                     obj.first_name = item[1];
                     obj.last_name = item[2];
                     final.push(obj);
-                  } 
+                  }
                   return final;
                 });
                 setListUsers(final);
@@ -207,82 +214,101 @@ function TableUser() {
           />
         </InputGroup>
       </div>
-
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>
-              <div className="table-header">
-                <span>ID</span>
-                {orderBy === "desc" && orderField === "id" ? (
-                  <i
-                    onClick={() => handleSort("asc", "id")}
-                    className="fa-solid fa-arrow-up-9-1"
-                  ></i>
-                ) : (
-                  <i
-                    onClick={() => handleSort("desc", "id")}
-                    className="fa-solid fa-arrow-down-1-9"
-                  ></i>
-                )}
-              </div>
-            </th>
-            <th>Email</th>
-            <th>
-              <div className="table-header">
-                <span>First Name</span>
-                {orderBy === "desc" && orderField === "first_name" ? (
-                  <i
-                    onClick={() => handleSort("asc", "first_name")}
-                    className="fa-solid fa-arrow-up-z-a"
-                  ></i>
-                ) : (
-                  <i
-                    onClick={() => handleSort("desc", "first_name")}
-                    className="fa-solid fa-arrow-down-a-z"
-                  ></i>
-                )}
-              </div>
-            </th>
-            <th>Last Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {listUsers &&
-            listUsers.length > 0 &&
-            listUsers.map((item, index) => (
-              <tr key={`user-${index}`}>
-                <td width={"5%"}>{item.id}</td>
-                <td>{item?.email}</td>
-                <td width={"20%"}>{item?.first_name}</td>
-                <td>{item?.last_name}</td>
-                <td width={"8%"}>
-                  <div className="d-flex justify-content-center gap-4">
-                    <Button
-                      variant="warning"
-                      onClick={() => {
-                        setMode("edit");
-                        setIsShowModal(true);
-                        setEditUser(item);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="danger"
-                      onClick={() => {
-                        handleDelete(item);
-                      }}
-                    >
-                      Delete
-                    </Button>
+      {isloading ? (
+        <div
+          style={{
+            minHeight: "500px",
+          }}
+          className="d-flex justify-content-center align-items-center "
+        >
+          <Loading />
+        </div>
+      ) : (
+        <>
+          <Table
+            style={{
+              minHeight: "500px",
+            }}
+            striped
+            bordered
+            hover
+          >
+            <thead>
+              <tr>
+                <th>
+                  <div className="table-header">
+                    <span>ID</span>
+                    {orderBy === "desc" && orderField === "id" ? (
+                      <i
+                        onClick={() => handleSort("asc", "id")}
+                        className="fa-solid fa-arrow-up-9-1"
+                      ></i>
+                    ) : (
+                      <i
+                        onClick={() => handleSort("desc", "id")}
+                        className="fa-solid fa-arrow-down-1-9"
+                      ></i>
+                    )}
                   </div>
-                </td>
+                </th>
+                <th>Email</th>
+                <th>
+                  <div className="table-header">
+                    <span>First Name</span>
+                    {orderBy === "desc" && orderField === "first_name" ? (
+                      <i
+                        onClick={() => handleSort("asc", "first_name")}
+                        className="fa-solid fa-arrow-up-z-a"
+                      ></i>
+                    ) : (
+                      <i
+                        onClick={() => handleSort("desc", "first_name")}
+                        className="fa-solid fa-arrow-down-a-z"
+                      ></i>
+                    )}
+                  </div>
+                </th>
+                <th>Last Name</th>
+                <th>Action</th>
               </tr>
-            ))}
-        </tbody>
-      </Table>
+            </thead>
+            <tbody>
+              {listUsers &&
+                listUsers.length > 0 &&
+                listUsers.map((item, index) => (
+                  <tr key={`user-${index}`}>
+                    <td width={"5%"}>{item.id}</td>
+                    <td>{item?.email}</td>
+                    <td width={"20%"}>{item?.first_name}</td>
+                    <td>{item?.last_name}</td>
+                    <td width={"8%"}>
+                      <div className="d-flex justify-content-center gap-4">
+                        <Button
+                          variant="warning"
+                          onClick={() => {
+                            setMode("edit");
+                            setIsShowModal(true);
+                            setEditUser(item);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => {
+                            handleDelete(item);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </>
+      )}
       {listUsers && listUsers.length > 0 && (
         <Paginate
           totalPage={totalPage}
@@ -291,24 +317,115 @@ function TableUser() {
         />
       )}
 
-      <>
-        <ModalComponent
-          editUser={editUser}
+   
+
+      <section className="mt-5">
+        <h2>Advance: using redux</h2>
+        <ol>
+          <li>
+            Setup env:
+            <ul>
+              <li>Hello world with react</li>
+              <li>Push code to Github</li>
+            </ul>
+          </li>
+          <li>Phân tích yêu cầu các chức năng cần làm</li>
+          <li>
+            Design giao diện Header
+            <ul>
+              <li>Setup Bootstrap 5, SASS, Axios</li>
+              <li>
+                Sử dụng Component Nav của Bootstrap tạo giao diện responsive
+              </li>
+            </ul>
+          </li>
+          <li>
+            Hiển thị List Users
+            <ul>
+              <li>Sử dụng Axios để gọi APIs</li>
+              <li>
+                Sử dụng Table Bootstrap và State React để render List User
+              </li>
+            </ul>
+          </li>
+          <li>Customize axios</li>
+          <li>Giải thích cơ chế phân trang: pagination</li>
+          <li>Tích hợp component phân trang</li>
+          <li>Tạo modal Thêm người dùng</li>
+          <li>Tích hợp APIs create users</li>
+          <li>Actions in Table (edit/delete). Tạo Model Edit users</li>
+          <li>Tích hợp Apis edit users</li>
+          <li>Tạo modal confirm</li>
+          <li>Tích hợp Apis delete users</li>
+          <li>
+            Design sort header
+            <ul>
+              <li>Tich hop frontawesome 6</li>
+              <li>Css header</li>
+              <li>Onclick, base state react</li>
+            </ul>
+          </li>
+          <li>
+            Filter users by id/email
+            <ul>
+              <li>Input search</li>
+              <li>Handler filter</li>
+              <li>Lodash debounce</li>
+            </ul>
+          </li>
+          <li>Install library/how to read docs (excel)</li>
+          <li>Design giao diện import/export</li>
+          <li>Export data</li>
+          <li>Import data</li>
+          <li>
+            Design App layout
+            <ul>
+              <li>Page layout</li>
+              <li>React router dom version 6</li>
+            </ul>
+          </li>
+          <li>Design Login</li>
+          <li>Apis Login</li>
+          <li>Handle login error</li>
+          <li>
+            Usecontext
+            <ul>
+              <li>Fixed Header</li>
+            </ul>
+          </li>
+          <li>Private routes</li>
+          <li>Fix lỗi Hot Reloading react</li>
+          <li>
+            Fix giao diện
+            <ul>
+              <li>router not found</li>
+              <li>Trim email, enter login</li>
+              <li>Responsive mobile</li>
+            </ul>
+          </li>
+          <li>Deploy to Heroku</li>
+          <li>Setup redux (checkout new branch)</li>
+          <li>Remove useContext</li>
+          <li>Add error boundary</li>
+          <li>What do they expect ???</li>
+        </ol>
+      </section>
+      <ModalComponent
+        editUser={editUser}
+        mode={mode}
+        show={isShowModal}
+        handleClose={handleClose}
+        handleUpdateList={handleUpdateList}
+      />
+      {editUser && (
+        <ModalDelete
           mode={mode}
-          show={isShowModal}
+          delInfoUser={editUser}
+          show={isShowModalDelete}
           handleClose={handleClose}
           handleUpdateList={handleUpdateList}
         />
-        {editUser && (
-          <ModalDelete
-            mode={mode}
-            delInfoUser={editUser}
-            show={isShowModalDelete}
-            handleClose={handleClose}
-            handleUpdateList={handleUpdateList}
-          />
-        )}
-      </>
+      )}
     </>
   );
 }
