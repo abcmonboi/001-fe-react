@@ -6,6 +6,7 @@ import FormGroup from "./FormGroup";
 import { createUser, updateUser } from "../services/UserServices";
 import { toast } from "react-toastify";
 import Loading from "./Loading";
+
 const ModalComponent = ({
   editUser,
   mode,
