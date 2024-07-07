@@ -37,24 +37,10 @@ function Header(props) {
             <NavLink className="nav-link" to="/users">
               Manage User
             </NavLink>
-            {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.2">
-                    Another action
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.4">
-                    Separated link
-                  </NavDropdown.Item>
-                </NavDropdown> */}
           </Nav>
           <Nav>
             <NavLink className="nav-link" to="/sign-in">
               Sign in
-            </NavLink>
-            <NavLink className="nav-link" to="/sign-up">
-              Sign up
             </NavLink>
           </Nav>
         </Navbar.Collapse>

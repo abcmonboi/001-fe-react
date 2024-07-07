@@ -11,3 +11,38 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.login-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+.title{
+  text-align: center;
+  margin: 20px 0;
+  font-size: 30px;
+  font-weight: 600;
+  padding-top: 30px;
+}
+.text {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.login-container .input {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  &:focus {
+    border: 1px solid #000;
+  }
+}
+.eye-watch {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
