@@ -1,0 +1,16 @@
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    i {
+      color: green;
+      cursor: pointer;
+    }
+  }
+.button-group {
+    display: flex;
+    gap: 12px;
+    i {
+        margin-right: 4px;
+    }
+}  

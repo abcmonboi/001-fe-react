@@ -22,10 +22,11 @@ const FormGroup = ({
         onChange={(e) => {
           setPayload({ ...payload, [controlId]: e.target.value });
         }}
-        //hover to  validate the form
+        //hover to  validate the forms
         isValid={payload[controlId] && payload[controlId].length > 0}
         type={type}
         placeholder={placeholder}
+        value={payload[controlId]}
       />
     </Col>
 
