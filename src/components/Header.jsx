@@ -2,7 +2,7 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import logo from "../assets/images/logo.svg";
+import logo from "../assets/images/logo192.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserContext } from "../context/UserContext";
@@ -42,18 +42,18 @@ function Header(props) {
               height="30"
               className="d-inline-block align-top"
             />
-            <span> React ABootstrap</span>
+            <span> React Bootstrap</span>
           </NavLink>
         </Navbar.Brand>
         <Navbar.Toggle hidden={!user?.auth}  aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-        {(user.auth || window.location.pathname === "/") && (
+        {(user.auth || window.location.pathname !== "/login") && (
               <>
                 <Nav className="me-auto">
                   <NavLink to="/" className="nav-link" activeclassname="active">
                     Home
                   </NavLink>
-                  {user && user.email && (
+                  {/* {user && user.email && ( */}
                     <NavLink
                       to="/users"
                       className="nav-link"
@@ -61,7 +61,7 @@ function Header(props) {
                     >
                       Manage User
                     </NavLink>
-                  )}
+                  {/* )} */}
                 </Nav>
                 <Nav>
                   {user && user.email && (

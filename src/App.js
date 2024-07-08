@@ -1,15 +1,12 @@
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./components/Header";
-import TableUser from "./components/TableUser";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Routes, Route } from "react-router-dom";
-import Home from "./components/Home";
 import { Container } from "react-bootstrap";
-import Login from "./components/Login";
 import { useContext, useEffect } from "react";
 import { UserContext } from "./context/UserContext";
+import AppRouters from "./routers/AppRouters";
 
 function App() {
   const { loginContext } = useContext(UserContext);
@@ -26,11 +23,7 @@ function App() {
     <div className="App">
       <Header />
       <Container>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="users" element={<TableUser />} />
-          <Route path="login" element={<Login />} />
-        </Routes>
+        <AppRouters />
       </Container>
       <ToastContainer
         position="top-center"
