@@ -13,9 +13,8 @@ const AppRouters = () => {
           <Route path="/login" element={<Login />} />
         </Route>
         <Route path="/users" element={<PrivateRoute />}></Route>
-        <Route path="*" element={<NotFound/>}></Route>
+        <Route path="*" element={<NotFound />}></Route>
       </Routes>
-      
     </>
   );
 };

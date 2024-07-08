@@ -38,11 +38,11 @@ function Header(props) {
             <img
               alt="logo"
               src={logo}
-              width="30"
-              height="30"
+              width="40"
+              height="40"
               className="d-inline-block align-top"
             />
-            <span> React Bootstrap</span>
+
           </NavLink>
         </Navbar.Brand>
         <Navbar.Toggle hidden={!user?.auth}  aria-controls="basic-navbar-nav" />

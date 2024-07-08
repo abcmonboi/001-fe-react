@@ -31,8 +31,12 @@ const Login = () => {
       setIsLogging(false);
       return;
     }
+    //trim email and password before sending to the server
+    let res = await loginApi({
+      email: payload.email.trim(),
+      password: payload.password.trim(),
+    });
 
-    let res = await loginApi(payload);
     //   {
     //     eve.holt@reqres.in
     //     cityslicka
@@ -58,7 +62,11 @@ const Login = () => {
     <>
       <div className="login-container col-lg-8 col-sm-6  col-xl-4">
         <div className="title text-dark">Log in</div>
-        <div className="text-dark">{"Email or username"}</div>
+        <div className="text-dark">
+          <p className="font-weight-bold">
+            Email or username (eve.holt@reqres.in)
+          </p>
+        </div>
         <form>
           <input
             value={payload.email}
