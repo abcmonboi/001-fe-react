@@ -42,50 +42,52 @@ function Header(props) {
               height="40"
               className="d-inline-block align-top"
             />
-
           </NavLink>
         </Navbar.Brand>
-        <Navbar.Toggle hidden={!user?.auth}  aria-controls="basic-navbar-nav" />
+        <Navbar.Toggle
+          hidden={window.location.pathname === "/login"}
+          aria-controls="basic-navbar-nav"
+        />
         <Navbar.Collapse id="basic-navbar-nav">
-        {(user.auth || window.location.pathname !== "/login") && (
-              <>
-                <Nav className="me-auto">
-                  <NavLink to="/" className="nav-link" activeclassname="active">
-                    Home
-                  </NavLink>
-                  {/* {user && user.email && ( */}
-                    <NavLink
-                      to="/users"
-                      className="nav-link"
-                      activeclassname="active"
-                    >
-                      Manage User
-                    </NavLink>
-                  {/* )} */}
-                </Nav>
-                <Nav>
-                  {user && user.email && (
-                    <span className="nav-link text-white">
-                      {"Hello "}
-                      {user && user.email.toUpperCase().split("@")[0]}
-                    </span>
-                  )}
-                  <NavDropdown title="Settings" id="basic-nav-dropdown">
-                    {user && user.auth === true ? (
-                      <>
-                        <NavDropdown.Item onClick={() => handleLogout()}>
-                          Logout
-                        </NavDropdown.Item>
-                      </>
-                    ) : (
-                      <NavDropdown.Item onClick={() => navigate("/login")}>
-                        Login
+          {(user.auth || window.location.pathname !== "/login") && (
+            <>
+              <Nav className="me-auto">
+                <NavLink to="/" className="nav-link" activeclassname="active">
+                  Home
+                </NavLink>
+                {/* {user && user.email && ( */}
+                <NavLink
+                  to="/users"
+                  className="nav-link"
+                  activeclassname="active"
+                >
+                  Manage User
+                </NavLink>
+                {/* )} */}
+              </Nav>
+              <Nav>
+                {user && user.email && (
+                  <span className="nav-link text-white">
+                    {"Hello "}
+                    {user && user.email.toUpperCase().split("@")[0]}
+                  </span>
+                )}
+                <NavDropdown title="Settings" id="basic-nav-dropdown">
+                  {user && user.auth === true ? (
+                    <>
+                      <NavDropdown.Item onClick={() => handleLogout()}>
+                        Logout
                       </NavDropdown.Item>
-                    )}
-                  </NavDropdown>
-                </Nav>
-              </>
-            )}
+                    </>
+                  ) : (
+                    <NavDropdown.Item onClick={() => navigate("/login")}>
+                      Login
+                    </NavDropdown.Item>
+                  )}
+                </NavDropdown>
+              </Nav>
+            </>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>

@@ -1,16 +1,64 @@
-.table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    i {
-      color: green;
-      cursor: pointer;
+$primary-color: #4caf50;
+$secondary-color: #f8f9fa;
+$text-color: #333;
+$background-color: #fff;
+$border-color: #ddd;
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  th,
+  td {
+    padding: 12px;
+    text-align: left;
+  }
+  th {
+    background-color: lighten($primary-color, 40%);
+    color: $text-color;
+  }
+  @media screen and (max-width: 768px) {
+    th,
+    td {
+      padding: 4px;
     }
   }
+}
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  i {
+    color: green;
+    cursor: pointer;
+  }
+}
 .button-group {
-    display: flex;
-    gap: 12px;
-    i {
-        margin-right: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  i {
+    margin-right: 4px;
+  }
+  @media screen and (max-width: 768px) {
+    button span,
+    a span,
+    label span {
+      font-size: 12px;
+      // display: none;
     }
-}  
+  }
+}
+.table-loading {
+  min-height: 400px;
+  @media screen and (max-width: 768px) {
+    min-height: 300px;
+  }
+}
+.button-group-action{
+  gap: 12px;
+  @media screen and (max-width:768px){
+    button{
+      padding: 4px 8px;
+    }
+  }
+}

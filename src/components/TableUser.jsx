@@ -156,7 +156,7 @@ function TableUser() {
   };
   return (
     <>
-      <div className="mt-4 mb-3 d-flex justify-content-between align-align-items-center">
+      <div className="mt-4 mb-3 d-sm-flex justify-content-between align-align-items-center">
         <h3> Manage User </h3>
         <div className="button-group">
           <button
@@ -166,8 +166,10 @@ function TableUser() {
             className="btn btn-secondary"
           >
             <i className="fa-solid fa-download"></i>
-            <span>Download Template File</span>
+            <span>Template</span>
           </button>
+
+       
           <label htmlFor="importCSV" className="btn btn-info">
             <i className="fa-solid fa-file-csv"></i>
             <span>Import</span>
@@ -201,7 +203,7 @@ function TableUser() {
           </button>
         </div>
       </div>
-      <div className="col-5">
+      <div className="col-12 col-sm-4 ">
         <InputGroup className="mb-3">
           <InputGroup.Text id="basic-addon1">
             <i className="fa-solid fa-magnifying-glass"></i>
@@ -216,19 +218,14 @@ function TableUser() {
       </div>
       {isloading ? (
         <div
-          style={{
-            minHeight: "500px",
-          }}
-          className="d-flex justify-content-center align-items-center "
+          className="d-flex justify-content-center align-items-center table-loading"
         >
           <Loading />
         </div>
       ) : (
         <>
+           <div className="customize-tablemobile table-loading">
           <Table
-            style={{
-              minHeight: "500px",
-            }}
             striped
             bordered
             hover
@@ -281,8 +278,8 @@ function TableUser() {
                     <td>{item?.email}</td>
                     <td width={"20%"}>{item?.first_name}</td>
                     <td>{item?.last_name}</td>
-                    <td width={"8%"}>
-                      <div className="d-flex justify-content-center gap-4">
+                    <td width={"5%"}>
+                      <div className="d-flex justify-content-center button-group-action">
                         <Button
                           variant="warning"
                           onClick={() => {
@@ -307,6 +304,7 @@ function TableUser() {
                 ))}
             </tbody>
           </Table>
+        </div>
         </>
       )}
       {listUsers && listUsers.length > 0 && (
@@ -317,99 +315,7 @@ function TableUser() {
         />
       )}
 
-   
 
-      <section className="mt-5">
-        <h2>Advance: using redux</h2>
-        <ol>
-          <li>
-            Setup env:
-            <ul>
-              <li>Hello world with react</li>
-              <li>Push code to Github</li>
-            </ul>
-          </li>
-          <li>Phân tích yêu cầu các chức năng cần làm</li>
-          <li>
-            Design giao diện Header
-            <ul>
-              <li>Setup Bootstrap 5, SASS, Axios</li>
-              <li>
-                Sử dụng Component Nav của Bootstrap tạo giao diện responsive
-              </li>
-            </ul>
-          </li>
-          <li>
-            Hiển thị List Users
-            <ul>
-              <li>Sử dụng Axios để gọi APIs</li>
-              <li>
-                Sử dụng Table Bootstrap và State React để render List User
-              </li>
-            </ul>
-          </li>
-          <li>Customize axios</li>
-          <li>Giải thích cơ chế phân trang: pagination</li>
-          <li>Tích hợp component phân trang</li>
-          <li>Tạo modal Thêm người dùng</li>
-          <li>Tích hợp APIs create users</li>
-          <li>Actions in Table (edit/delete). Tạo Model Edit users</li>
-          <li>Tích hợp Apis edit users</li>
-          <li>Tạo modal confirm</li>
-          <li>Tích hợp Apis delete users</li>
-          <li>
-            Design sort header
-            <ul>
-              <li>Tich hop frontawesome 6</li>
-              <li>Css header</li>
-              <li>Onclick, base state react</li>
-            </ul>
-          </li>
-          <li>
-            Filter users by id/email
-            <ul>
-              <li>Input search</li>
-              <li>Handler filter</li>
-              <li>Lodash debounce</li>
-            </ul>
-          </li>
-          <li>Install library/how to read docs (excel)</li>
-          <li>Design giao diện import/export</li>
-          <li>Export data</li>
-          <li>Import data</li>
-          <li>
-            Design App layout
-            <ul>
-              <li>Page layout</li>
-              <li>React router dom version 6</li>
-            </ul>
-          </li>
-          <li>Design Login</li>
-          <li>Apis Login</li>
-          <li>Handle login error</li>
-          <li>
-            Usecontext
-            <ul>
-              <li>Fixed Header</li>
-            </ul>
-          </li>
-          <li>Private routes</li>
-          <li>Fix lỗi Hot Reloading react</li>
-          <li>
-            Fix giao diện
-            <ul>
-              <li>router not found</li>
-              <li>Trim email, enter login</li>
-              <li>Responsive mobile</li>
-            </ul>
-          </li>
-          <li>Deploy to Heroku</li>
-          <li>Setup redux (checkout new branch)</li>
-          <li>Remove useContext</li>
-          <li>Add error boundary</li>
-          <li>What do they expect ???</li>
-        </ol>
-      </section>
       <ModalComponent
         editUser={editUser}
         mode={mode}

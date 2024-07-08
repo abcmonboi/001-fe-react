@@ -3,7 +3,7 @@ import { Pagination } from "react-bootstrap";
 
 const Paginate = ({ totalPage, page, handleChangePage }) => {
   return (
-    <Pagination>
+    <Pagination className="pagination">
       {page > 1 && (
         <Pagination.Prev linkClassName="text-dark border-secondary" onClick={() => handleChangePage(page - 1)} />
       )}
