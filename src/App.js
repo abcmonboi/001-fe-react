@@ -8,8 +8,20 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import { Container } from "react-bootstrap";
 import Login from "./components/Login";
+import { useContext, useEffect } from "react";
+import { UserContext } from "./context/UserContext";
 
 function App() {
+  const { loginContext } = useContext(UserContext);
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      loginContext(
+        localStorage.getItem("email"),
+        localStorage.getItem("token")
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="App">
       <Header />
@@ -17,7 +29,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="users" element={<TableUser />} />
-          <Route path="sign-in" element={<Login />} />
+          <Route path="login" element={<Login />} />
         </Routes>
       </Container>
       <ToastContainer

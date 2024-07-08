@@ -3,8 +3,12 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loginApi } from "../services/UserServices";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 const Login = () => {
   const navigate = useNavigate();
+  const { loginContext } = useContext(UserContext);
+
   const [payload, setPayLoad] = useState({
     email: "",
     password: "",
@@ -14,7 +18,8 @@ const Login = () => {
 
   useEffect(() => {
     let token = localStorage.getItem("token");
-    if (token) {
+    let email = localStorage.getItem("email");
+    if (token && email) {
       navigate("/");
     }
     // eslint-disable-next-line
@@ -34,11 +39,10 @@ const Login = () => {
     // }
 
     if (res && res.token) {
-      localStorage.setItem("token", res.token);
+      // localStorage.setItem("token", res.token);
       toast.success(`Welcome ${payload.email}`);
       setIsLogging(false);
-
-      // loginContext(email.trim(), res.token);
+      loginContext(payload?.email.trim(), res.token);
       navigate("/");
     } else {
       console.log(res);
