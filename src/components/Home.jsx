@@ -32,13 +32,6 @@ const Home = () => {
         </ul>
       </section>
 
-      {/* <section>
-        <h2>Yêu cầu backend (optional - không bắt buộc):</h2>
-        <p>
-          Sử dụng python django rest framework, tạo các api như trên trang web:{" "}
-          <a href="https://reqres.in/">https://reqres.in/</a>
-        </p>
-      </section> */}
       <section>
         <h2>Basic</h2>
         <ol>

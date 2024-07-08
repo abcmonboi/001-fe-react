@@ -16,6 +16,7 @@ $border-color: #ddd;
     color: $text-color;
   }
   @media screen and (max-width: 768px) {
+    font-size: 14px;
     th,
     td {
       padding: 4px;
@@ -44,7 +45,10 @@ $border-color: #ddd;
     a span,
     label span {
       font-size: 12px;
-      // display: none;
+    }
+    .btn {
+      padding: 6px 4px;
+    
     }
   }
 }
@@ -54,10 +58,10 @@ $border-color: #ddd;
     min-height: 300px;
   }
 }
-.button-group-action{
+.button-group-action {
   gap: 12px;
-  @media screen and (max-width:768px){
-    button{
+  @media screen and (max-width: 768px) {
+    button {
       padding: 4px 8px;
     }
   }
