@@ -3,8 +3,16 @@ import { Container } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "../assets/images/logo.svg";
-import { NavLink } from "react-router-dom";
+import { NavLink,useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 function Header(props) {
+  const navigate =useNavigate();
+  const handleLogout = () =>{
+    localStorage.removeItem("token");
+    toast.success("Log out successfully");
+    navigate("/");
+
+  }
   return (
     <Navbar
       bg="dark"
@@ -40,7 +48,10 @@ function Header(props) {
           </Nav>
           <Nav>
             <NavLink className="nav-link" to="/sign-in">
-              Sign in
+              Log in
+            </NavLink>
+            <NavLink className="nav-link" onClick={()=>handleLogout()}>
+              Log out
             </NavLink>
           </Nav>
         </Navbar.Collapse>
