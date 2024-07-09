@@ -8,6 +8,9 @@ import { PersistGate } from 'redux-persist/integration/react';
 // import { UserProvider } from "./context/UserContext";
 import { Provider } from 'react-redux';
 import reduxStore from './redux/store';
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import "./App.scss";
+
 const { store, persistor } = reduxStore();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -16,7 +19,9 @@ root.render(
     {/* <UserProvider> */}
       <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
+        <ErrorBoundary fallback={<div class="error-message">Something went wrong</div>}>
         <App />
+        </ErrorBoundary>
         </PersistGate>
       </Provider>
     {/* </UserProvider> */}

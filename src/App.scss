@@ -54,3 +54,12 @@ code {
   justify-content: center;
  
 }
+.error-message {
+  background-color: #ff4e4e;
+  color: white;
+  padding: 20px 40px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-size: 1.2em;
+}
