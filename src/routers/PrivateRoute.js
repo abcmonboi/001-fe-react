@@ -1,22 +1,24 @@
 import React from "react";
 import TableUsers from "../components/TableUser";
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+// import { useContext } from "react";
+// import { UserContext } from "../context/UserContext";
 import { Alert } from "react-bootstrap";
+import { useSelector } from "react-redux";
 // import Container from "react-bootstrap/Container";
 
 const PrivateRoute = () => {
-  const { user } = useContext(UserContext);
+  // const { user } = useContext(UserContext);
+  const user = useSelector((state) => state.user);
 
-  if(user && !user.auth){
-    return <>
-       <Alert variant="danger" className="mt-5" >
-        <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
-        <p>
-        Users need to log in to access this feature.
-        </p>
-      </Alert>
-    </>
+  if (user && !user.auth) {
+    return (
+      <>
+        <Alert variant="danger" className="mt-5">
+          <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+          <p>Users need to log in to access this feature.</p>
+        </Alert>
+      </>
+    );
   }
   return (
     <>

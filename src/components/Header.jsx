@@ -4,17 +4,21 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "../assets/images/logo192.png";
 import { NavLink, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { UserContext } from "../context/UserContext";
-import { useContext } from "react";
+// import { UserContext } from "../context/UserContext";
+// import { useContext } from "react";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import { useSelector,useDispatch } from "react-redux";
+import { handleLogoutRedux } from "../redux/actions/userActions";
+import { toast } from "react-toastify";
 
 function Header(props) {
   const navigate = useNavigate();
-  const { user, logout } = useContext(UserContext);
+  // const { user, logout } = useContext(UserContext);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const handleLogout = () => {
     if (user && user.auth === true) {
-      logout();
+      dispatch(handleLogoutRedux());
       toast.success("Logout successfully");
       navigate("/login");
     }

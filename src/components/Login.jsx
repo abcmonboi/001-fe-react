@@ -1,62 +1,94 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { loginApi } from "../services/UserServices";
+// import { loginApi } from "../services/UserServices";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+// import { useContext } from "react";
+// import { UserContext } from "../context/UserContext";
+import { useDispatch, useSelector } from "react-redux";
+import { handleLoginRedux } from "../redux/actions/userActions";
 const Login = () => {
   const navigate = useNavigate();
-  const { loginContext } = useContext(UserContext);
-
+  // const { loginContext } = useContext(UserContext);
+  const dispatch = useDispatch();
+  const dataUser = useSelector((state) => state.user);
+  console.log(dataUser);
   const [payload, setPayLoad] = useState({
     email: "",
     password: "",
   });
   const [isShow, setIsShow] = useState(false);
-  const [isLogging, setIsLogging] = useState(false);
+  const isLogging = dataUser?.isLogging;
 
   useEffect(() => {
-    let token = localStorage.getItem("token");
-    let email = localStorage.getItem("email");
-    if (token && email) {
+    if (
+      dataUser &&
+      dataUser.auth === true &&
+      dataUser?.token &&
+      dataUser?.email
+    ) {
       navigate("/");
     }
     // eslint-disable-next-line
-  }, []);
+  }, [dataUser]);
+  useEffect(() => {
+    if (
+      dataUser?.msg &&
+      dataUser?.auth === false &&
+      dataUser?.isLogging === false &&
+      dataUser?.isError === true
+    ) {
+      toast.error(dataUser?.msg);
+    }
+
+    if (
+      dataUser?.msg &&
+      dataUser?.auth === true &&
+      dataUser?.isLogging === false
+    ) {
+      toast.success(dataUser?.msg);
+    }
+     // eslint-disable-next-line
+  }, [dataUser?.isLogging]);
   const handleLogin = async () => {
-    setIsLogging(true);
+    // setIsLogging(true);
     if (payload.email === "" || payload.password === "") {
       toast.error("Email or password is empty");
-      setIsLogging(false);
+      // setIsLogging(false);
       return;
     }
     //trim email and password before sending to the server
-    let res = await loginApi({
-      email: payload.email.trim(),
-      password: payload.password.trim(),
-    });
+    // let res = await loginApi({
+    //   email: payload.email.trim(),
+    //   password: payload.password.trim(),
+    // });
+    dispatch(
+      handleLoginRedux({
+        email: payload.email.trim(),
+        password: payload.password.trim(),
+      })
+    );
 
     //   {
     //     eve.holt@reqres.in
     //     cityslicka
     // }
 
-    if (res && res.token) {
-      // localStorage.setItem("token", res.token);
-      toast.success(`Welcome ${payload.email}`);
-      setIsLogging(false);
-      loginContext(payload?.email.trim(), res.token);
-      navigate("/");
-    } else {
-      console.log(res);
-      if (res && res.status === 400) {
-        toast.error(res.data.error);
-      } else {
-        toast.error("Login failed");
-      }
-      setIsLogging(false);
-    }
+    // if (res && res.token) {
+    //   // localStorage.setItem("token", res.token);
+    //   toast.success(`Welcome ${payload.email}`);
+    //   setIsLogging(false);
+    //   loginContext(payload?.email.trim(), res.token);
+    //   navigate("/");
+    // } else {
+    //   console.log(res);
+    //   if (res && res.status === 400) {
+    //     toast.error(res.data.error);
+    //   } else {
+    //     toast.error("Login failed");
+    //   }
+    //   setIsLogging(false);
+    // }
   };
   return (
     <>

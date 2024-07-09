@@ -4,14 +4,22 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { BrowserRouter } from "react-router-dom";
-import { UserProvider } from "./context/UserContext";
+import { PersistGate } from 'redux-persist/integration/react';
+// import { UserProvider } from "./context/UserContext";
+import { Provider } from 'react-redux';
+import reduxStore from './redux/store';
+const { store, persistor } = reduxStore();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
   <BrowserRouter>
-    <UserProvider>
-      <App />
-    </UserProvider>
+    {/* <UserProvider> */}
+      <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+        </PersistGate>
+      </Provider>
+    {/* </UserProvider> */}
   </BrowserRouter>
   //  </React.StrictMode>
 );

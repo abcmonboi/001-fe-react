@@ -4,18 +4,22 @@ import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Container } from "react-bootstrap";
-import { useContext, useEffect } from "react";
-import { UserContext } from "./context/UserContext";
+import {  useEffect } from "react";
+// import { UserContext } from "./context/UserContext";
 import AppRouters from "./routers/AppRouters";
+import { useSelector } from "react-redux";
+import { handleGetUserRedux } from "./redux/actions/userActions";
+import { useDispatch } from "react-redux";
 
 function App() {
-  const { loginContext } = useContext(UserContext);
+  // const { loginContext } = useContext(UserContext);
+  const a =null;
+  console.log(a.ss)
+  const dispatch = useDispatch();
+  const dataUser = useSelector((state) => state.user);
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      loginContext(
-        localStorage.getItem("email"),
-        localStorage.getItem("token")
-      );
+    if (dataUser?.email && dataUser?.token) {
+      dispatch(handleGetUserRedux)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
