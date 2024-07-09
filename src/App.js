@@ -1,4 +1,3 @@
-import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
@@ -13,7 +12,6 @@ import { useDispatch } from "react-redux";
 
 function App() {
   // const { loginContext } = useContext(UserContext);
-  const a =null;
   // console.log(a.ss)
   const dispatch = useDispatch();
   const dataUser = useSelector((state) => state.user);
