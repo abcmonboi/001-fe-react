@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 function App() {
   // const { loginContext } = useContext(UserContext);
   const a =null;
-  console.log(a.ss)
+  // console.log(a.ss)
   const dispatch = useDispatch();
   const dataUser = useSelector((state) => state.user);
   useEffect(() => {
